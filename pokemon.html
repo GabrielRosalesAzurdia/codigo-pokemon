@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>  
+
+    //Clase Pokemon para crear pokemons
+    class Pokemon{
+        constructor(nombre, tipo, ataques, vida, velocidad){
+            this.id = new Date().getTime()
+            this.tipo = tipo
+            this.nombre = nombre
+            this.ataques = ataques
+            this.vida = vida
+            this.velocidad = velocidad
+        }
+    }
+
+    //Clase Tipo para manejar los tipos de los ataques y de los pokemon
+    class Tipo{
+        constructor(nombre){
+            this.id = new Date().getTime()
+            this.nombre = nombre
+
+            switch (nombre) {
+                case "fuego":
+                    this.debilidad = "agua"
+                    this.fuerza = "planta"
+                    break;
+                case "agua":
+                    this.debilidad = "planta"
+                    this.fuerza = "fuego"
+                    break;
+                case "planta":
+                    this.debilidad = "fuego"
+                    this.fuerza = "agua"
+                    break;
+                case "normal":
+                    this.debilidad = "lucha"
+                    this.fuerza = " "
+                    break;
+                case "psiquico": 
+                    this.debilidad = "fantasma"
+                    this.fuerza = "lucha"
+                    break;
+                case "lucha":
+                    this.debilidad = "volador"
+                    this.fuerza = "normal"
+                    break;
+                case "fantasma":
+                    this.debilidad = "siniestro"
+                    this.fuerza = "psiquico"
+                    break;
+                case "siniestro":
+                    this.debilidad = "siniestro"
+                    this.fuerza = "fantasma"
+                    break;
+                case "volador":
+                    this.debilidad = "electrico"
+                    this.fuerza = "lucha"
+                    break;
+                case "electrico":
+                    this.debilidad = "tierra"
+                    this.fuerza = "volador"
+                    break;
+                case "tierra":
+                    this.debilidad = "tierra"
+                    this.fuerza = "electrico"
+                    break;
+                default:
+                    this.debilidad = " "
+                    this.fuerza = " "
+                    break;
+            }
+
+        }
+    }
+
+    //Clase Ataque que crea los ataques de los pokemon
+    class Ataque{
+        constructor(nombre, tipo, potencia){
+            this.id = new Date().getTime()
+            this.nombre = nombre
+            this.tipo = tipo
+            this.potencia = potencia
+        }
+    }
+
+    //función crear_pokemon que crea pokemons pidiendo todos los datos por prompts
+    function crear_pokemon(){
+        alert("Vamos a crear un pokemon!")
+        let nombre_pokemon = prompt("Dame el nombre del pokemon")
+        let tipo_pokemon = new Tipo(prompt("Dame el tipo del pokemon"),)
+        let lista_de_ataques = []
+        for(let i = 0; i < 4; i++){
+            lista_de_ataques.push(
+                new Ataque(
+                    prompt("Nombre del ataque"+(i+1)),
+                    new Tipo(prompt("Tipo del ataque"+(i+1)),),
+                    Number(prompt("Potencia del ataque"+(i+1))),
+                )
+            )
+        }
+        let vida_pokemon = Number(prompt("Dame la vida del pokemon"))
+        let velocidad_pokemon = Number(prompt("Dame la velocidad del pokemon"))
+        let pokemon_nuevo = new Pokemon(nombre_pokemon, tipo_pokemon, lista_de_ataques, vida_pokemon, velocidad_pokemon)
+        alert(JSON.stringify(pokemon_nuevo))
+        return pokemon_nuevo
+    }
+
+    // Para ser dinámico
+    // let pokemon1 = crear_pokemon()
+    // let pokemon2 = crear_pokemon()
+
+    // predefinidos para pruebas
+    let pokemon1 = new Pokemon(
+        "charmander",
+        new Tipo("fuego"),
+        [new Ataque("placaje",new Tipo("normal"), 50),new Ataque("lanzallamas", new Tipo("fuego"), 80), 
+        new Ataque("ataque ala", new Tipo("volador"), 60), new Ataque("azcuas", new Tipo("fuego"), 40)],
+        100,
+        100
+    )
+    let pokemon2 = new Pokemon(
+        "bulbasaur",
+        new Tipo("planta"),
+        [new Ataque("placaje",new Tipo("normal"), 50),new Ataque("pistola agua", new Tipo("agua"), 40), 
+        new Ataque("latigo cepa", new Tipo("planta"), 60), new Ataque("semillero", new Tipo("planta"), 60)],
+        100,
+        60
+    )   
+
+    //función combate que crea un bucle que termina cuando el combate termina
+    function combate(poke1, poke2){
+        alert("comienza el combate!")
+        while(true){
+
+            if(poke1.velocidad >= poke2.velocidad && poke1.vida > 0 && poke2.vida > 0){
+
+                let ataque_a_realizar1 = prompt("Qué ataque debería hacer " + poke1.nombre + ". Lista de ataques " + JSON.stringify(poke1.ataques)  + ". Vida: " + poke1.vida)
+                for(let i of poke1.ataques){
+                    if(i.nombre == ataque_a_realizar1){
+                        if(i.tipo.fuerza == poke2.tipo.nombre){
+                            poke2.vida = poke2.vida - (i.potencia * 0.4)
+                            console.log("Entro a eficaz")
+                        }
+                        else if (i.tipo.debilidad == poke2.tipo.nombre){
+                            poke2.vida = poke2.vida - (i.potencia * 0.1)  
+                        }
+                        else{
+                            poke2.vida = poke2.vida - (i.potencia * 0.3)
+                        }
+                    }
+                }
+
+                if(poke2.vida <= 0){
+                    break
+                }
+
+                let ataque_a_realizar2 = prompt("Qué ataque debería hacer " + poke2.nombre + ". Lista de ataques " + JSON.stringify(poke2.ataques) + ". Vida: " + poke2.vida)
+                for(let i of poke2.ataques){
+                    if(i.nombre == ataque_a_realizar2){
+                        if(i.tipo.fuerza == poke1.tipo.nombre){
+                            poke1.vida = poke1.vida - (i.potencia * 0.4)
+                            console.log("Entro a eficaz")
+                        }
+                        else if (i.tipo.debilidad == poke1.tipo.nombre){
+                            poke1.vida = poke1.vida - (i.potencia * 0.1)  
+                        }
+                        else{
+                            poke1.vida = poke1.vida - (i.potencia * 0.3)
+                        }
+                    }
+                }
+
+            }else if (poke2.velocidad > poke1.velocidad && poke1.vida > 0 && poke2.vida > 0){
+
+                let ataque_a_realizar3 = prompt("Qué ataque debería hacer " + poke2.nombre + ". Lista de ataques " + JSON.stringify(poke2.ataques) + ". Vida: " + poke2.vida)
+                for(let i of poke2.ataques){
+                    if(i.nombre == ataque_a_realizar3){
+                        if(i.tipo.fuerza == poke1.tipo.nombre){
+                            poke1.vida = poke1.vida - (i.potencia * 0.4)
+                            console.log("Entro a eficaz")
+                        }
+                        else if (i.tipo.debilidad == poke1.tipo.nombre){
+                            poke1.vida = poke1.vida - (i.potencia * 0.1)  
+                        }
+                        else{
+                            poke1.vida = poke1.vida - (i.potencia * 0.3)
+                        }
+                    }
+                }
+
+                if(poke1.vida <= 0){
+                    break
+                }
+
+                let ataque_a_realizar4 = prompt("Qué ataque debería hacer " + poke1.nombre + ". Lista de ataques " + JSON.stringify(poke1.ataques)  + ". Vida: " + poke1.vida)
+                for(let i of poke1.ataques){
+                    if(i.nombre == ataque_a_realizar1){
+                        if(i.tipo.fuerza == poke2.tipo.nombre){
+                            poke2.vida = poke2.vida - (i.potencia * 0.4)
+                            console.log("Entro a eficaz")
+                        }
+                        else if (i.tipo.debilidad == poke2.tipo.nombre){
+                            poke2.vida = poke2.vida - (i.potencia * 0.1)  
+                        }
+                        else{
+                            poke2.vida = poke2.vida - (i.potencia * 0.3)
+                        }
+                    }
+                }
+
+            }
+
+        }
+        if(poke1.vida > 0){
+            alert("El combate ha finalizado! el ganador es: " + poke1.nombre)
+            }
+        else{
+            alert("El combate ha finalizado! el ganador es:" + poke2.nombre)
+        }
+
+    }
+    // inicia el combate
+    combate(pokemon1, pokemon2)
+</script>
+</html>
